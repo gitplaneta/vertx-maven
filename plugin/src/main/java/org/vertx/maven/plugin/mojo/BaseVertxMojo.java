@@ -37,6 +37,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import static java.nio.file.Files.readAllBytes;
+import java.util.Iterator;
 import static org.vertx.java.platform.PlatformLocator.factory;
 
 public abstract class BaseVertxMojo extends AbstractMojo {
@@ -220,6 +221,10 @@ public abstract class BaseVertxMojo extends AbstractMojo {
     List<URL> urls = new ArrayList<>();
     addURLs(urls, "src/main/platform_lib");
     addURLs(urls, "src/main/resources/platform_lib");
+    
+    for(Object classPathElement: project.getRuntimeClasspathElements()) {
+        urls.add((new File(classPathElement.toString())).toURI().toURL());
+    }
 
     return new LoadFirstClassLoader(urls.toArray(new URL[urls.size()]), getClass().getClassLoader());
   }
